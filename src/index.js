@@ -2,16 +2,11 @@ import React from "react";
 import { render } from "react-dom";
 import { makeData} from "./Utils";
 import matchSorter from 'match-sorter'
-import { CSVLink, CSVDownload } from "react-csv";
-// Import React Table
+import { CSVLink } from "react-csv";
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
-// pure component
-const AllUpperCase = props => <span>{props.value.toUpperCase()}</span>;
-
-
 class App extends React.Component {
   constructor() {
     super();
@@ -24,15 +19,9 @@ class App extends React.Component {
   }
 
   onFilteredChange(filtered) {
-    // console.log('filtered:',filtered);
-    // const { sortedData } = this.reactTable.getResolvedState();
-    // console.log('sortedData:', sortedData);
-
-    // extra check for the "filterAll"
     if (filtered.length > 1 && this.state.filterAll.length) {
-      // NOTE: this removes any FILTER ALL filter
       const filterAll = '';
-      this.setState({ filtered: filtered.filter((item) => item.id != 'all'), filterAll })
+      this.setState({ filtered: filtered.filter((item) => item.id !== 'all'), filterAll })
     }
     else
       this.setState({ filtered });
@@ -42,13 +31,11 @@ class App extends React.Component {
     const { value } = e.target;
     const filterAll = value;
     const filtered = [{ id: 'all', value: filterAll }];
-    // NOTE: this completely clears any COLUMN filters
     this.setState({ filterAll, filtered });
   }
 
   render() {
     const { data } = this.state;
-     var csvData = this.state.data;
     return (
       <div>
       <div className="topheader"> <p className="title">DataTable</p> </div>
@@ -60,39 +47,37 @@ class App extends React.Component {
         <p className="datacontnetone">
           advanced features to any HTML table
         </p>
-
       </div>
       <div className="col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
         <div className="row mainbody">
           <div className="row tablerow">
-          <div className="col-sm-4 col-md-3 col-lg-3">
-           <div>
-            <input  value={this.state.filterAll} onChange={this.filterAll} className="form-control" placeholder="Search"/> 
-            <span className="glyphicon glyphicon-search form-control-feedback"></span>
-            </div>
+            <div className="col-sm-4 col-md-3 col-lg-3">
+              <input  value={this.state.filterAll} onChange={this.filterAll} className="form-control" placeholder="Search"/> 
+              <span className="glyphicon glyphicon-search form-control-feedback"></span>
            </div>
            <div className="col-sm-4 col-md-7 col-lg-7"></div>
-           <div className="col-sm-4  col-md-2 col-lg-2">
-           <CSVLink
-          data={this.state.data}
-          className="btn btn-info">
-          Export to .CSV
-        </CSVLink>
+            <div className="col-sm-4  col-md-2 col-lg-2">
+              <CSVLink
+                data={this.state.data}
+                className="btn btn-info" 
+                filename={"DataTable.csv"}>
+                Export to .CSV
+              </CSVLink>
            </div>
           </div>
           <div className="row tablerow">
-          <ReactTable
-          getTrProps={(state,rowInfo)=>{
-          }}
-          filtered={this.state.filtered}
-          ref={r => this.reactTable = r}
-          onFilteredChange={this.onFilteredChange.bind(this)}
-          data={data}
-          defaultFilterMethod={(filter, row) =>
+            <ReactTable
+            getTrProps={(state,rowInfo)=>{
+            }}
+            filtered={this.state.filtered}
+            ref={r => this.reactTable = r}
+            onFilteredChange={this.onFilteredChange.bind(this)}
+            data={data}
+            defaultFilterMethod={(filter, row) =>
             String(row[filter.id]) === filter.value}
-          columns={[
-            {
-              columns: [
+            columns={[
+              {
+                columns: [
                 {
                   Header: "Item1",
                   accessor: "Item1",
@@ -110,7 +95,7 @@ class App extends React.Component {
               ]
             },
             {
-              columns: [
+                columns: [
                 {
                   Header: "Invoice_number",
                   accessor: "Invoice_number"
@@ -134,7 +119,6 @@ class App extends React.Component {
             {
               Header: "",
               id: 'all',
-              class : 'allclass',
               width: -0,
               resizable: false,
               sortable: false,
@@ -160,14 +144,13 @@ class App extends React.Component {
             },
 
           ]}
-          defaultPageSize={10}
-          className="table"
-
-          getTrProps={(state,rowInfo)=>{ 
+            defaultPageSize={10}
+            className="table"
+            getTrProps={(state,rowInfo)=>{ 
             return {} 
           }}
         />
-          </div>
+        </div>
         </div>
       </div>    
       </div>
